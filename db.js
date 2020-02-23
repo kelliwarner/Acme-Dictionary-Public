@@ -98,8 +98,6 @@ module.exports = {
 //******************************** */
 
 //CURRENT STATUS -
-// YOURE DOING GREAT SWEETIEEEEEEEE
-// ALL THE GETS ARE WORKING!!!
 
 // current delete doesnt work , red error in console
 
