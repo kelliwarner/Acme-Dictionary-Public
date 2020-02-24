@@ -1,5 +1,6 @@
 const pg = require('pg');
 const faker = require('faker');
+const uuid = require('uuid');
 const { Client } = pg;
 
 const client = new Client('postgres://localhost/acme_dictionary_db');
@@ -13,27 +14,27 @@ const sync = async () => {
     DROP TABLE IF EXISTS adjective;
 
     CREATE TABLE noun(
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY,
       name VARCHAR
       );
     CREATE TABLE verb(
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY,
       name VARCHAR
       );
     CREATE TABLE adjective(
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY,
       name VARCHAR
       );
 
-    INSERT INTO noun (name)
-    VALUES ('${faker.hacker.noun()}');
-    INSERT INTO noun (name)
-    VALUES ('${faker.hacker.noun()}');
+    INSERT INTO noun (id, name)
+    VALUES ('${uuid()}', '${faker.hacker.noun()}');
+    INSERT INTO noun (id, name)
+    VALUES ('${uuid()}', '${faker.hacker.noun()}');
 
-    INSERT INTO verb (name)
-    VALUES ('${faker.hacker.verb()}');
-    INSERT INTO adjective (name)
-    VALUES ('${faker.hacker.adjective()}');
+    INSERT INTO verb (id, name)
+    VALUES ('${uuid()}', '${faker.hacker.verb()}');
+    INSERT INTO adjective (id, name)
+    VALUES ('${uuid()}', '${faker.hacker.adjective()}');
   `;
   await client.query(SQL);
 };
@@ -64,30 +65,38 @@ const deleteNoun = async id => {
   DELETE FROM noun WHERE (id)=$1
   `;
   const response = await client.query(SQL, [id]);
-  console.log(response);
   return response.rows[0];
 };
-deleteNoun(1);
 
-// const deleteVerb = async id => {
-//   const SQL = `
-//   SELECT * FROM verb WHERE id=$1
-//   `;
-//   const response = await client.query(SQL, [id]);
-//   return response.rows;
-// };
+const deleteVerb = async id => {
+  const SQL = `DELETE FROM verb WHERE (id)=$1`;
+  const response = await client.query(SQL, [id]);
+  return response.rows[0];
+};
 
-// const deleteAdjective = async id => {
-//   const SQL = `
-//   SELECT * FROM adjective WHERE id=$1
-//   `;
-//   const response = await client.query(SQL, [id]);
-//   return response.rows;
-// };
+const deleteAdjective = async id => {
+  const SQL = `DELETE FROM adjective WHERE (id)=$1`;
+  const response = await client.query(SQL, [id]);
+  return response.rows[0];
+};
 
-// const createNoun = () => {}
-// const createVerb = () => {}
-// const createAdjective = () => {}
+const createNoun = async () => {
+  const SQL = `INSERT INTO noun (id, name) VALUES('${uuid()}', '${faker.hacker.noun()}') returning *;`;
+  const response = await client.query(SQL);
+  return response.rows[0];
+};
+
+const createVerb = async () => {
+  const SQL = `INSERT INTO verb (id, name) VALUES ('${uuid()}', '${faker.hacker.verb()}')returning *`;
+  const response = await client.query(SQL);
+  return response.rows[0];
+};
+
+const createAdjective = async () => {
+  const SQL = `INSERT INTO adjective (id, name) VALUES ('${uuid()}', '${faker.hacker.adjective()}') returning *`;
+  const response = await client.query(SQL);
+  return response.rows[0];
+};
 
 module.exports = {
   sync,
@@ -95,14 +104,9 @@ module.exports = {
   readVerbs,
   readAdjectives,
   deleteNoun,
-  // deleteVerb,
-  // deleteAdjective,
-  // createNoun,
-  // createVerb,
-  // createAdjective,
+  deleteVerb,
+  deleteAdjective,
+  createNoun,
+  createVerb,
+  createAdjective,
 };
-
-// *********************************/
-// CURRENT STATUS
-// not able to find the route for app.delete
-// need to build out post

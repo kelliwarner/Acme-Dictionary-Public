@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const db = require('./db');
-// const bodyParser = require('body-parser');
 const path = require('path');
 
 app.use((req, res, next) => {
@@ -17,7 +16,6 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/index.html')));
 app.get('/api/nouns', (req, res, next) => {
   db.readNouns()
     .then(nouns => {
-      console.log(nouns);
       res.send(nouns);
     })
     .catch(next);
@@ -35,12 +33,41 @@ app.get('/api/adjectives', (req, res, next) => {
     .catch(next);
 });
 
-app.delete('api/nouns/:id', (req, res, next) => {
-  console.log('app.delete is being called');
-  db.deleteNoun(req.params)
+app.delete('/api/nouns/:id', (req, res, next) => {
+  db.deleteNoun(req.params.id)
     .then(response => {
       res.send(response);
     })
+    .catch(next);
+});
+
+app.delete('/api/verbs/:id', (req, res, next) => {
+  db.deleteVerb(req.params.id)
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.delete('/api/adjectives/:id', (req, res, next) => {
+  db.deleteAdjective(req.params.id)
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.post('/api/nouns', (req, res, next) => {
+  db.createNoun()
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.post('/api/verbs', (req, res, next) => {
+  db.createVerb()
+    .then(response => res.send(response))
+    .catch(next);
+});
+
+app.post('/api/adjectives', (req, res, next) => {
+  db.createAdjective()
+    .then(response => res.send(response))
     .catch(next);
 });
 

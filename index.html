@@ -53,8 +53,6 @@
             });
         }, []);
         const destroyWord = (type, word) => {
-          console.log('in destroy word, type is', type, 'and id is', word.id);
-          console.log(`/api/${type}/${word.id}`);
           axios
             .delete(`/api/${type}/${word.id}`)
             .then(response => response.data)
