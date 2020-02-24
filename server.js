@@ -36,10 +36,9 @@ app.get('/api/adjectives', (req, res, next) => {
 });
 
 app.delete('api/nouns/:id', (req, res, next) => {
-  console.log('req.body is', req.body);
-  db.deleteNoun(req.body.id)
+  console.log('app.delete is being called');
+  db.deleteNoun(req.params)
     .then(response => {
-      console.log(response);
       res.send(response);
     })
     .catch(next);

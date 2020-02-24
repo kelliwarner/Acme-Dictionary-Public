@@ -6,10 +6,6 @@ const client = new Client('postgres://localhost/acme_dictionary_db');
 
 client.connect();
 
-// faker.hacker.noun()
-// faker.hacker.verb()
-// faker.hacker.adjective()
-
 const sync = async () => {
   const SQL = `
     DROP TABLE IF EXISTS noun;
@@ -65,13 +61,33 @@ const readAdjectives = async () => {
 
 const deleteNoun = async id => {
   const SQL = `
-  SELECT * FROM noun WHERE id=$1
+  DELETE FROM noun WHERE (id)=$1
   `;
   const response = await client.query(SQL, [id]);
-  return response.rows;
+  console.log(response);
+  return response.rows[0];
 };
+deleteNoun(1);
 
-// put my CRUD functions here
+// const deleteVerb = async id => {
+//   const SQL = `
+//   SELECT * FROM verb WHERE id=$1
+//   `;
+//   const response = await client.query(SQL, [id]);
+//   return response.rows;
+// };
+
+// const deleteAdjective = async id => {
+//   const SQL = `
+//   SELECT * FROM adjective WHERE id=$1
+//   `;
+//   const response = await client.query(SQL, [id]);
+//   return response.rows;
+// };
+
+// const createNoun = () => {}
+// const createVerb = () => {}
+// const createAdjective = () => {}
 
 module.exports = {
   sync,
@@ -79,26 +95,14 @@ module.exports = {
   readVerbs,
   readAdjectives,
   deleteNoun,
-  //crud
+  // deleteVerb,
+  // deleteAdjective,
+  // createNoun,
+  // createVerb,
+  // createAdjective,
 };
 
-// CREATE TABLE verb(
-//   id SERIAL PRIMARY KEY,
-//   word VARCHAR
-//   );
-
-// CREATE TABLE adjective(
-//   id SERIAL PRIMARY KEY,
-//   word VARCHAR
-//   );
-
-//   DROP TABLE IF EXISTS verb;
-// DROP TABLE IF EXISTS adjective;
-
-//******************************** */
-
-//CURRENT STATUS -
-
-// current delete doesnt work , red error in console
-
+// *********************************/
+// CURRENT STATUS
+// not able to find the route for app.delete
 // need to build out post
